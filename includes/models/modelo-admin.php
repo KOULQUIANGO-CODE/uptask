@@ -19,6 +19,7 @@ if($accion === 'crear'){
         $stmt = $conn->prepare("INSERT INTO usuarios(usuario, password) VALUES (?,?)");
         $stmt->bind_param('ss', $usuario,$hash_password);
         $stmt->execute();
+        
         //en el caso de haber un error ejecutar este codigo para identificarlo 
         // $respuesta = array(
         //     'respuesta' => $stmt->error_list,

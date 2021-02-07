@@ -50,7 +50,7 @@
                                     const { value: ok } = await Swal.fire({
                                         icon: 'success',
                                         title: 'Usuario Creado',
-                                        text: '¡Usuario Creado Exitasamente!',
+                                        text: '¡Usuario Creado Exitosamente!',
                                         inputValue: 'ok'
                                     })
                                     if (ok) {
