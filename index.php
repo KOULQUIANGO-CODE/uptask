@@ -4,6 +4,7 @@ include_once 'includes/function/funciones.php';
 include_once 'includes/templates/header.php'; 
 include_once 'includes/templates/barra.php';
 // var_dump($_SESSION);
+$id_perfil = $_SESSION['id'];
 // Obtener el ID de la URL
 if(isset($_GET['id_proyecto'])){
     $id_proyecto = $_GET['id_proyecto'];
@@ -12,6 +13,7 @@ if(isset($_GET['id_proyecto'])){
 <div class="contenedor">
 <?php include_once 'includes/templates/sidebar.php'; ?>
     <main class="contenido-principal">
+    <input type="hidden" id="perfil" value="<?php echo $id_perfil?>">
     <div class="menu-contenedor"><div class="menu-movil"><i class="fas fa-bars menu"></i></div></div>
     <?php $proyectos = obtenerNombreProyecto($id_proyecto);
         if($proyectos):?>

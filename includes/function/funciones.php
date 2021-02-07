@@ -9,10 +9,10 @@ function obtenederPaginaActual(){
     return $pagina;
 }
 // obtener todos los Proyectos
-function ObtenerProyectos(){
+function ObtenerProyectos($id){
     require('conexion.php');
     try {
-        return $conn->query("SELECT id_proyecto,nombre FROM proyectos");
+        return $conn->query("SELECT id_proyecto,nombre FROM proyectos WHERE id_usuario = {$id}");
     } catch (\Exception $e) {
         echo "¡ERROR!" . $e->getMessage() . '<br>';
         return false;

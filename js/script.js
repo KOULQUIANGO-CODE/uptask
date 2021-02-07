@@ -52,13 +52,16 @@ function guardarProyectoDB(nombreProyecto) {
     const datos = new FormData();
     datos.append('proyectos', nombreProyecto);
     datos.append('accion', 'crear');
+    datos.append('id_perfil', document.querySelector('#perfil').value);
+
+
     // abrir la conexion
     xhr.open('POST', 'includes/models/modelo-proyecto.php', true);
     // pasar los datos
     xhr.onload = function() {
             if (this.status === 200) {
                 // obtener datos de la respuesta
-                // console.log(JSON.parse(xhr.responseText));
+                console.log(JSON.parse(xhr.responseText));
                 const respuesta = JSON.parse(xhr.responseText);
                 let proyecto = respuesta.nombreProyecto,
                     id_proyecto = respuesta.id_proyecto,

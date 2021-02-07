@@ -8,7 +8,7 @@
             <h2>Proyectos</h2>
             <ul id="proyectos" class="proyectos">
             
-            <?php $proyectos = ObtenerProyectos()?>
+            <?php $proyectos = ObtenerProyectos($_SESSION['id'])?>
             <?php if($proyectos){
                 foreach($proyectos as $proyecto){    
             ?>

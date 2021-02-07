@@ -55,7 +55,7 @@ if($accion === 'login'){
         $stmt->bind_param('s', $usuario);
         $stmt->execute();
         // loguear al usuario
-        $stmt->bind_result($nombre_usuario,$id_usuario,$pass_usuario);
+        $stmt->bind_result($id_usuario,$nombre_usuario,$pass_usuario);
         $stmt->fetch();
         if($nombre_usuario){
             // el usuario existe verificar el password
