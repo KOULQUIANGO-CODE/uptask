@@ -13,10 +13,11 @@ function eventListeners() {
 document.querySelector('.menu-contenedor').addEventListener('click', menu);
 
 function menu() {
-    const contenedor = document.querySelector('.contenedor-proyectos'),
-        newtarea = document.querySelector('.nueva-tarea');
-    newtarea.classList.toggle('ocultar');
-
+    const contenedor = document.querySelector('.contenedor-proyectos');
+    if (document.querySelector('.agregar-tarea')) {
+        const newtarea = document.querySelector('.nueva-tarea');
+        newtarea.classList.toggle('ocultar');
+    }
     contenedor.classList.toggle('ocultar-menu');
 
 }
