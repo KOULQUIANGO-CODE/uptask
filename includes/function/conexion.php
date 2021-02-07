@@ -1,9 +1,9 @@
 <?php
 // credenciales database
-define('DB_USUARIO','uzxmtajyybhicc3x');
-define('DB_PASSWORD','2DEoFRnnPyAjzhmWVnEX');
-define('DB_HOST','bse4ahk5bxa5sqgazam3-mysql.services.clever-cloud.com');
-define('DB_NAME','bse4ahk5bxa5sqgazam3');
+define('DB_USUARIO','root');
+define('DB_PASSWORD','root');
+define('DB_HOST','localhost:3307');
+define('DB_NAME','uptask');
 $conn = new mysqli(DB_HOST,DB_USUARIO,DB_PASSWORD,DB_NAME);
 // comrueba conexion
 // echo $conn->ping(); 

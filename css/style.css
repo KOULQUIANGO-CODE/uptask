@@ -21,6 +21,10 @@ body {
 
 /** Login **/
 
+.caja-login .campo label {
+    margin-right: 0px;
+}
+
 .login,
 .crear-cuenta {
     background: #455A64;
@@ -47,13 +51,21 @@ body {
     background-color: #F2F2F2;
     border: 1px solid #707070;
     max-width: 650px;
-    width: 90%;
+    width: 95%;
     margin: 0 auto;
     min-height: 300px;
     -webkit-box-shadow: 0px 25px 35px -17px rgba(0, 0, 0, 0.56);
     -moz-box-shadow: 0px 25px 35px -17px rgba(0, 0, 0, 0.56);
     box-shadow: 0px 25px 35px -17px rgba(0, 0, 0, 0.56);
-    padding: 3rem;
+    padding: 3rem 1rem;
+    border-radius: 5px;
+}
+
+@media(min-width: 768) {
+    .caja-login {
+        width: 90%;
+        padding: 3rem;
+    }
 }
 
 .campo {
@@ -64,8 +76,21 @@ body {
 
 .campo label {
     flex: 0 0 100px;
-    text-align: right;
+    text-align: left;
     padding-right: 1rem;
+    margin-right: -38px;
+}
+
+@media(min-width: 768px) {
+    .campo label {
+        margin-right: 0;
+    }
+}
+
+@media(min-width: 768px) {
+    .campo label {
+        text-align: right;
+    }
 }
 
 .campo input[type="text"],
@@ -147,6 +172,13 @@ body.index {
     max-width: 300px;
     background-color: #607D8B;
     padding-top: 1rem;
+    display: none;
+}
+
+@media(min-width: 768px) {
+    .contenedor-proyectos {
+        display: block;
+    }
 }
 
 .panel {
@@ -208,6 +240,45 @@ body.index {
 
 /** Contenido Principal */
 
+.menu {
+    display: none;
+}
+
+@media(max-width: 768px) {
+    .menu-contenedor {
+        background-color: #49606b;
+        width: 5rem;
+        padding: 0.5rem 0.5rem 0.5rem 2rem;
+        left: -5rem;
+        border-radius: 5px;
+        position: relative;
+        left: -1.7rem;
+    }
+    .menu-movil {
+        font-size: 2rem;
+        position: relative;
+        padding: 1rem 0;
+    }
+    .menu {
+        position: absolute;
+        top: 0;
+        color: #fff;
+        display: block;
+    }
+}
+
+.ocultar-menu {
+    display: block;
+}
+
+.ocultar {
+    display: none;
+}
+
+body {
+    overflow: hidden;
+}
+
 .contenedor {
     display: flex;
     height: calc( 100% - 60px);
@@ -239,12 +310,18 @@ body.index {
 
 .agregar-tarea {
     max-width: 800px;
-    width: 90%;
+    width: 95%;
     background-color: #607D8B;
     margin: 0 auto;
     padding: 2rem;
     color: white;
     transition: background-color .5s ease-in-out;
+}
+
+@media(min-width: 768px) {
+    .agregar-tarea {
+        width: 90%;
+    }
 }
 
 
@@ -254,9 +331,15 @@ body.index {
     background-color: #F2F2F2;
     max-width: 800px;
     width: 90%;
-    margin: 2rem auto 0 auto;
+    margin: 2rem auto 5rem auto;
     padding: 2rem;
     border: 1px solid #999;
+}
+
+@media(min-width: 768px) {
+    .listado-pendientes {
+        margin: 2rem auto 0 auto;
+    }
 }
 
 .listado-pendientes ul {

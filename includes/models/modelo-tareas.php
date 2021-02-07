@@ -1,19 +1,23 @@
-<?php 
-// echo json_encode($_POST);
-$proyecto = filter_var($_POST['proyectos'],FILTER_SANITIZE_STRING);
+<?php
+$tarea = filter_var($_POST['tarea'],FILTER_SANITIZE_STRING);
 $accion = $_POST['accion'];
+$id_proyecto = (int) $_POST['id_proyecto'];
 if($accion === 'crear'){
     require('../function/conexion.php');
     try{
-        $stmt = $conn->prepare("INSERT INTO proyectos(nombre) VALUES (?)");
-        $stmt->bind_param('s',$proyecto);
+        $stmt = $conn->prepare("INSERT INTO tareas(nombre_tarea,id_proyecto) VALUES (?,?)");
+        $stmt->bind_param('si',$tarea,$id_proyecto);
         $stmt->execute();
         if($stmt->affected_rows > 0){
             $respuesta = array(
                 'respuesta' => 'correcto',
-                'id_proyecto' => $stmt->insert_id,
+                'id_tarea' => $stmt->insert_id,
                 'tipo' => $accion,
-                'nombreProyecto' =>$proyecto
+                'tarea' => $tarea
+            );
+        }else{
+            $respuesta = array(
+                'respuesta' => 'error'
             );
         }
         $stmt->close();
@@ -22,5 +26,4 @@ if($accion === 'crear'){
         $respuesta = array('error' => $e->getMessage());
     }
     echo json_encode($respuesta);
-}
-?>
+} ?>
