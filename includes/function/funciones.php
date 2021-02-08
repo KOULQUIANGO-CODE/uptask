@@ -29,10 +29,10 @@ function obtenerNombreProyecto($id = null){
     }
 }
 // obtner las tareas del protecto
-function obtenerTareaProyecto($id1 = null){
+function obtenerTareaProyecto($id = null){
     require('conexion.php');
     try {
-        return $conn->query("SELECT id_tareas,nombre_tarea FROM tareas WHERE id_proyecto = {$id1}");
+        return $conn->query("SELECT id_tareas,nombre_tarea,estado FROM tareas WHERE id_proyecto = {$id}");
     } catch (\Exception $e) {
         echo "¡ERROR!" . $e->getMessage() . '<br>';
         return false;

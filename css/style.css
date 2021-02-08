@@ -161,6 +161,10 @@ body.index {
 
 /*** sidebar**/
 
+.no-activo {
+    pointer-events: none;
+}
+
 .Bienvenido {
     padding: 1rem;
     color: #fff !important;
@@ -240,6 +244,20 @@ body.index {
 
 /** Contenido Principal */
 
+.btn-eliminar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 20px;
+    border-radius: 0 0 20px 20px;
+    border: none;
+    outline: none;
+}
+
+.tituloProyecto {
+    margin-top: 3.5rem;
+}
+
 .menu {
     display: none;
 }
@@ -288,6 +306,16 @@ body {
     flex: 1;
     padding: 1rem;
     overflow-y: scroll;
+    position: relative;
+}
+
+.contenido-principal::-webkit-scrollbar {
+    width: 10px;
+}
+
+.contenido-principal::-webkit-scrollbar-thumb {
+    background-color: #455A64;
+    border-radius: 5px;
 }
 
 .contenido-principal h1,

@@ -8,9 +8,17 @@ function eventListeners() {
         // boton para una nueva tarea
         document.querySelector('.nueva-tarea').addEventListener('click', agregarTarea);
     }
+    // menu-movil
+    document.querySelector('.menu-contenedor').addEventListener('click', menu);
+    // botones para las acciones de las tarea
+    document.querySelector('.listado-pendientes').addEventListener('click', accionesTareas);
+    // eliminar Proyecto
+    if (document.querySelector('.btn-eliminar')) {
+        document.querySelector('.btn-eliminar').addEventListener('click', eliminarProyecto);
+    }
+
 }
-// menu-movil
-document.querySelector('.menu-contenedor').addEventListener('click', menu);
+
 
 function menu() {
     const contenedor = document.querySelector('.contenedor-proyectos');
@@ -26,6 +34,9 @@ function nuevoProyecto(e) {
     e.preventDefault();
     // console.log('Presionaste')
     // crea un input para el nombre del nuevo proyecto
+    // desabilitar boton de añadir proyecto
+    const nuevoProyectobtn = document.querySelector('.btn-agregar-Proyecto');
+    nuevoProyectobtn.classList.add('no-activo');
     const nuevoProyecto = document.createElement('li');
     nuevoProyecto.innerHTML = '<input type="text" id="nuevo-proyecto">';
     listaProyectos.appendChild(nuevoProyecto);
@@ -75,7 +86,7 @@ function guardarProyectoDB(nombreProyecto) {
                         // se creo un nuevo proyecto
                         // inyectar en el html
                         const nuevoProyecto = document.createElement('li');
-                        nuevoProyecto.innerHTML = `<a href="index.php?id_proyecto=${id_proyecto}" id="${id_proyecto}"> ${nombreProyecto} </a>`;
+                        nuevoProyecto.innerHTML = `<a href="index.php?id_proyecto=${id_proyecto}" id="proyecto:${id_proyecto}"> ${nombreProyecto} </a>`;
                         //    agregar al html
                         listaProyectos.appendChild(nuevoProyecto);
                         Swal.fire({
@@ -106,6 +117,7 @@ function guardarProyectoDB(nombreProyecto) {
         // enviar datos
     xhr.send(datos);
 }
+
 // Agregar una nueva Tarea al proyecto actual
 function agregarTarea(e) {
     e.preventDefault();
@@ -118,6 +130,10 @@ function agregarTarea(e) {
             text: '¡El campo no puede ir vacio!'
         })
     } else {
+        // Desabilitar boton para evitar mas de una insercion
+        const nuevaTareabtn = document.querySelector('.nueva-tarea');
+        nuevaTareabtn.value = "Guardando...";
+        nuevaTareabtn.disabled = true;
         // la tarea tiene algo, insertar en php
         // llamado a ajax
         // crear el objecto
@@ -134,6 +150,7 @@ function agregarTarea(e) {
                 if (this.status === 200) {
                     // console.log(JSON.parse(xhr.responseText));
                     // leemos la respuesta de PHP
+
                     const respuesta = JSON.parse(xhr.responseText);
                     // console.log(respuesta);
                     const resultado = respuesta.respuesta,
@@ -146,10 +163,17 @@ function agregarTarea(e) {
                             Swal.fire({
                                     icon: 'success',
                                     title: 'Tarea Creada',
-                                    text: 'La tarea: ' + tarea + 'se creó correctamente'
+                                    text: 'La tarea: ' + tarea + ' se creó correctamente'
                                 })
-                                // contruir el template
+                                // habilitar de nuevo del boton
+                            nuevaTareabtn.value = "Agregar";
+                            nuevaTareabtn.disabled = false;
+                            // contruir el template
                             const nuevaTarea = document.createElement('li');
+                            // eliminar el parrafo de no existe tareas
+                            if (document.querySelector('#noExisteTarea')) {
+                                document.querySelector('#noExisteTarea').remove();
+                            }
                             // agregar el ID
                             nuevaTarea.id = 'tarea:' + id_insertado;
                             // agregar la clase tarea
@@ -175,13 +199,166 @@ function agregarTarea(e) {
                             text: '¡Hubo un error!'
                         })
                     }
-
-
-
                 }
             }
             // enviar datos
         xhr.send(datos);
-
     }
+}
+// cambia el estado de las tareas o las elimina
+// metodo delegation video 666
+function accionesTareas(e) {
+    e.preventDefault();
+    // target de vuelve el elemento en que doy click para asi evitar crear muchos addEventListener
+    // contains = si contiene
+    if (e.target.classList.contains('fa-check-circle')) {
+        if (e.target.classList.contains('completo')) {
+            e.target.classList.remove('completo');
+            cambiarEstadoTarea(e.target, 0);
+        } else {
+            e.target.classList.add('completo');
+            cambiarEstadoTarea(e.target, 1);
+        }
+    }
+    if (e.target.classList.contains('fa-trash')) {
+        Swal.fire({
+            title: '¿Seguro(a)?',
+            text: "¡Esta acción no se puede deshacer!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, eliminar!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const tareaEliminada = e.target.parentElement.parentElement;
+                //borrar de la base de datos
+                eliminarTareaBD(tareaEliminada)
+                    // borrar del Html
+                tareaEliminada.remove();
+                Swal.fire(
+                    'Eliminado!',
+                    'La tarea fue elimanda cón exito!',
+                    'success'
+                )
+            }
+        })
+    }
+}
+// completa o descompleta una tarea
+function cambiarEstadoTarea(tarea_parametro, estado) {
+    // split va separa en los parametros por ejemplo tarea:1 va ser igual a 'tarea','1'-> : es el parametro del split
+    const idTarea = tarea_parametro.parentElement.parentElement.id.split(':');
+    // console.log(idTarea[1]);
+    // llamado a ajax
+    // crear el objecto
+    const xhr = new XMLHttpRequest();
+    // crear FormData
+    const datos = new FormData();
+    datos.append('id', idTarea[1]);
+    datos.append('accion', 'actualizar');
+    datos.append('estado', estado);
+    // abrir la conexion
+    xhr.open('POST', 'includes/models/modelo-tareas.php', true);
+    // ejecutar y respuesta
+    xhr.onload = function() {
+            if (this.status === 200) {
+                // console.log(JSON.parse(xhr.responseText));
+                // leemos la respuesta de PHP
+                const respuesta = JSON.parse(xhr.responseText);
+                // console.log(respuesta);
+            }
+        }
+        // enviar la peticion
+    xhr.send(datos);
+}
+// elimina las tareas de la base de datos
+function eliminarTareaBD(tareaEliminada) {
+    const idTarea = tareaEliminada.id.split(':');
+    const xhr = new XMLHttpRequest();
+    // crear FormData
+    const datos = new FormData();
+    datos.append('id', idTarea[1]);
+    datos.append('accion', 'eliminar');
+    // abrir la conexion
+    xhr.open('POST', 'includes/models/modelo-tareas.php', true);
+    // ejecutar y respuesta
+    xhr.onload = function() {
+            if (this.status === 200) {
+                // console.log(JSON.parse(xhr.responseText));
+                // leemos la respuesta de PHP
+                const respuesta = JSON.parse(xhr.responseText);
+                //    elimnar que haya tareas restanes
+                const tareasRestantes = document.querySelectorAll('li.tarea');
+                if (tareasRestantes.length === 0) {
+                    document.querySelector('.listado-pendientes ul').innerHTML = "<p id='noExisteTarea'>No hay tareas en este proyecto</p>";
+                }
+            }
+        }
+        // enviar la peticion
+    xhr.send(datos);
+}
+// // elimina las proyecto de la base de datos
+function eliminarProyecto(e) {
+    e.preventDefault();
+    const proyectoEliminar = e.target.id.split(':');
+    Swal.fire({
+        title: '¿Seguro(a)?',
+        text: "¡Esta acción no se puede deshacer!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si, eliminar!',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            //borrar de la base de datos
+            eliminarProyectoBD(proyectoEliminar);
+
+        }
+    })
+}
+
+function eliminarProyectoBD(eliminarProyecto) {
+
+    const proyectoEliminar = eliminarProyecto;
+    // llamado a ajax
+    // crear el objecto
+    const xhr = new XMLHttpRequest();
+    // crear FormData
+    const datos = new FormData();
+    datos.append('id_proyecto', proyectoEliminar[1]);
+    datos.append('accion', 'eliminar');
+    // abrir la conexion
+    xhr.open('POST', 'includes/models/modelo-proyecto.php', true);
+    // ejecutar y respuesta
+    xhr.onload = function() {
+            if (this.status === 200) {
+                const respuesta = JSON.parse(xhr.responseText);
+                console.log(respuesta);
+                if (respuesta.respuesta === 'correcto') {
+                    // Notificacion
+                    Swal.fire(
+                        'Eliminado!',
+                        'El proyecto fue elimanda cón exito!',
+                        'success'
+                    ).then(resultado => {
+                        // redireccionar a la nueva URL
+                        if (resultado.value) {
+                            window.location.href = 'index.php';
+                        }
+                    })
+                } else {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'ERROR',
+                        text: '¡No se puede eliminar el proyecto si contiene tareas, eliminalas e intenta de nuevo!'
+                    })
+                }
+            }
+        }
+        // enviar la peticion
+    xhr.send(datos);
 }

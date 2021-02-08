@@ -17,8 +17,9 @@ if(isset($_GET['id_proyecto'])){
     <div class="menu-contenedor"><div class="menu-movil"><i class="fas fa-bars menu"></i></div></div>
     <?php $proyectos = obtenerNombreProyecto($id_proyecto);
         if($proyectos):?>
-        <h1>
-        Diseño Actual: 
+        <h1 class="tituloProyecto">
+        Diseño Actual:
+        <button class="boton btn-eliminar" id="eliminarProyecto:<?php echo $id_proyecto?>">Eliminar Proyecto</button>
             <?php foreach($proyectos as $nombre):?>
                 <span><?php echo $nombre['nombre']; ?></span>
             <?php endforeach; ?>
@@ -45,16 +46,25 @@ if(isset($_GET['id_proyecto'])){
 
         <div class="listado-pendientes" id="lis-tarea">
             <ul>
+            <!-- obtiene las tareas del proyecto actual -->
                 <?php $tareas = obtenerTareaProyecto($id_proyecto);
-                foreach($tareas as $tarea):?>
-                <li id="tarea:<?php echo $tarea['id_tareas'] ?>" class="tarea">
+                
+                if($tareas->num_rows > 0){
+                    foreach($tareas as $tarea):?>
+                    <!-- si hay tareas  -->
+                    <li id="tarea:<?php echo $tarea['id_tareas'] ?>" class="tarea">
                     <p><?php echo $tarea['nombre_tarea']; ?></p>
                     <div class="acciones">
-                        <i class="far fa-check-circle"></i>
+                        <i class="far fa-check-circle <?php echo($tarea['estado'] === '1' ? 'completo' : '');?>"></i>
                         <i class="fas fa-trash"></i>
                     </div>
                 </li>
-                <?php endforeach; ?> 
+                <?php endforeach; 
+                }else{
+                    //  no hay tareas 
+                    echo"<p id='noExisteTarea'>No hay tareas en este proyecto</p>";
+                }?> 
+               
              
             </ul>
         </div>
