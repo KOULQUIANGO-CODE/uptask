@@ -10,21 +10,45 @@
     function validarRegistro(e) {
         // e.preventDefault(); evita que el formulario se envie
         e.preventDefault();
+        if (document.querySelector('#nombre')) {
+            var nombre_usuario = document.querySelector('#nombre').value,
+                confirmarPassword = document.querySelector('#confirmar_password').value;
+        }
         let usuario = document.querySelector('#usuario').value,
             password = document.querySelector('#password').value,
             tipo = document.querySelector('#tipo').value;
         // console.log(usuario + ' ' + password);
+        if (document.querySelector('#nombre')) {
+            if (usuario === '' || password === '' || confirmarPassword === '' || nombre_usuario === '') {
+                // la validacion fallo
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: '¡Todos los campos son obligatorios!'
+                })
+            } else if (password != confirmarPassword) {
+                // validar contraseña
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: '¡Las contraseñas no coinciden!'
+                })
+            }
+        }
         if (usuario === '' || password === '') {
             // la validacion fallo
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: '¡Ambos campos son Obligatorios!'
+                text: '¡Todos los campos son obligatorios!'
             })
         } else {
             //Los dos campos son carrectos, mandar a llamar ajax
             let datos = new FormData();
             datos.append('usuario', usuario);
+            if (document.querySelector('#nombre')) {
+                datos.append('nombre_usuario', nombre_usuario);
+            }
             datos.append('password', password);
             datos.append('accion', tipo);
             // console.log(datos.get('accion'));

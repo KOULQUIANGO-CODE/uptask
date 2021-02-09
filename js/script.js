@@ -2,6 +2,10 @@ eventListeners();
 const listaProyectos = document.querySelector('ul#proyectos');
 
 function eventListeners() {
+    // document Ready
+    document.addEventListener('DOMContentLoaded', function() {
+        actualizarProgreso();
+    });
     //Boton para crear proyectos;
     document.querySelector(".crear-proyecto a").addEventListener('click', nuevoProyecto);
     if (document.querySelector('.agregar-tarea')) {
@@ -72,7 +76,7 @@ function guardarProyectoDB(nombreProyecto) {
     xhr.onload = function() {
             if (this.status === 200) {
                 // obtener datos de la respuesta
-                console.log(JSON.parse(xhr.responseText));
+                // console.log(JSON.parse(xhr.responseText));
                 const respuesta = JSON.parse(xhr.responseText);
                 let proyecto = respuesta.nombreProyecto,
                     id_proyecto = respuesta.id_proyecto,
@@ -190,6 +194,7 @@ function agregarTarea(e) {
                             listado.appendChild(nuevaTarea);
                             // limpiar el formulario
                             document.querySelector('.agregar-tarea').reset();
+                            actualizarProgreso();
                         }
                     } else {
                         // hubo un error
@@ -264,10 +269,14 @@ function cambiarEstadoTarea(tarea_parametro, estado) {
     // ejecutar y respuesta
     xhr.onload = function() {
             if (this.status === 200) {
+                // actualizar la barra de procentaje
+                actualizarProgreso();
                 // console.log(JSON.parse(xhr.responseText));
                 // leemos la respuesta de PHP
-                const respuesta = JSON.parse(xhr.responseText);
+                // const respuesta = JSON.parse(xhr.responseText);
                 // console.log(respuesta);
+
+
             }
         }
         // enviar la peticion
@@ -294,6 +303,9 @@ function eliminarTareaBD(tareaEliminada) {
                 if (tareasRestantes.length === 0) {
                     document.querySelector('.listado-pendientes ul').innerHTML = "<p id='noExisteTarea'>No hay tareas en este proyecto</p>";
                 }
+                // actualizar el progreso 
+                actualizarProgreso();
+
             }
         }
         // enviar la peticion
@@ -361,4 +373,44 @@ function eliminarProyectoBD(eliminarProyecto) {
         }
         // enviar la peticion
     xhr.send(datos);
+}
+// actuliza el avanse del proyecto
+function actualizarProgreso() {
+    const tareas = document.querySelectorAll('li.tarea');
+    // console.log(tareas.length);
+    // obtener las tareas completadas
+    const tareasCompletadas = document.querySelectorAll('i.completo');
+    // console.log(tareasCompletadas.length);
+    // determinar el avance 
+    const avance = Math.round((tareasCompletadas.length / tareas.length) * 100);
+    console.log(avance);
+    // asiganar el avance a la barra 
+    const porcentaje = document.querySelector('#porcentaje');
+    porcentaje.style.width = avance + '%';
+    if (document.querySelector('.fa-check-circle')) {
+        // mostrar el avance del proyecto
+        if (!document.querySelector('.fa-check-circle')) {
+            document.querySelector('.avance').remove();
+        }
+        if (document.querySelector('.progreso')) {
+            document.querySelector('.progreso').remove();
+        }
+        const spanHtml = document.querySelector('.tituloAvance');
+        const etiquetaHtml = document.createElement('h2');
+        etiquetaHtml.innerHTML = ` Avance del Proyecto: ${avance}%`;
+        etiquetaHtml.classList.add('progreso');
+        spanHtml.appendChild(etiquetaHtml);
+
+    }
+
+
+    // mostrar una alerta al completar el 100 %
+
+    if (avance === 100) {
+        Swal.fire(
+            'Proyecto Terminado!',
+            'Ya no tienes tareas pendientes!',
+            'success'
+        )
+    }
 }

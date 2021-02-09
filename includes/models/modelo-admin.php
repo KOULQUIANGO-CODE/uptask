@@ -1,4 +1,5 @@
 <?php
+$nombre_usuario = filter_var($_POST['nombre_usuario'],FILTER_SANITIZE_STRING);
  $usuario = filter_var($_POST['usuario'],FILTER_SANITIZE_STRING);
  $password = filter_var($_POST['password'],FILTER_SANITIZE_STRING);
  $accion = $_POST['accion'];
@@ -16,8 +17,8 @@ if($accion === 'crear'){
     // die(json_encode($_POST));
     // validamos entradas
     try{
-        $stmt = $conn->prepare("INSERT INTO usuarios(usuario, password) VALUES (?,?)");
-        $stmt->bind_param('ss', $usuario,$hash_password);
+        $stmt = $conn->prepare("INSERT INTO usuarios(usuario,nombre_usuario, password) VALUES (?,?,?)");
+        $stmt->bind_param('sss', $usuario,$nombre_usuario,$hash_password);
         $stmt->execute();
         
         //en el caso de haber un error ejecutar este codigo para identificarlo 
@@ -51,24 +52,24 @@ if($accion === 'login'){
     require_once ('../function/conexion.php');
     try{
         // seleccinar el administrador de la base de datos
-        $stmt = $conn->prepare("SELECT  id_usuario,usuario, password FROM usuarios WHERE usuario = ?");
+        $stmt = $conn->prepare("SELECT  id_usuario,nombre_usuario, usuario, password FROM usuarios WHERE usuario = ?");
         $stmt->bind_param('s', $usuario);
         $stmt->execute();
         // loguear al usuario
-        $stmt->bind_result($id_usuario,$nombre_usuario,$pass_usuario);
+        $stmt->bind_result($id_usuario,$nombre_usuario,$usuario,$pass_usuario);
         $stmt->fetch();
-        if($nombre_usuario){
+        if($usuario){
             // el usuario existe verificar el password
             if(password_verify($password,$pass_usuario)){
                 // iniciamos seccion
                 session_start();
-                $_SESSION['nombre_usuario'] = $usuario;
+                $_SESSION['nombre_usuario'] = $nombre_usuario;
                 $_SESSION['id'] = $id_usuario;
                 $_SESSION['login'] = true;
                 // login correcto
                 $respuesta = array(
                     'respuesta' => 'correcto',
-                    'nombre' =>$nombre_usuario,
+                    'nombre' =>$usuario,
                     'tipo' => $accion,
                     'culumna' => $stmt->affected_rows,
                     'validacion' => 'exitosa'

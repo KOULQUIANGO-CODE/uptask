@@ -7,6 +7,10 @@ include_once 'includes/templates/header.php';
 <div class="contenedor-formulario">
     <h1>UpTask <span>Crear Cuenta</span></h1>
     <form id="formulario" class=" caja-login" method="post">
+    <div class="campo">
+            <label for="nombre">Nombre: </label>
+            <input type="text" name="nombre" id="nombre" placeholder="Nombre">
+        </div>
         <div class="campo">
             <label for="usuario">Usuario: </label>
             <input type="text" name="usuario" id="usuario" placeholder="Usuario">
@@ -14,6 +18,10 @@ include_once 'includes/templates/header.php';
         <div class="campo">
             <label for="password">Password: </label>
             <input type="password" name="password" id="password" placeholder="Password">
+        </div>
+        <div class="campo">
+            <label for="confirmar_password">Confirmar Password: </label>
+            <input type="password" name="confirmar_password" id="confirmar_password" placeholder="Confirme Password">
         </div>
         <div class="campo enviar">
             <input type="hidden" id="tipo" value="crear">
