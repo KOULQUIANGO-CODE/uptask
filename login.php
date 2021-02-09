@@ -20,7 +20,7 @@ if(isset($_GET['cerrar_session'])){
         </div>
         <div class="campo enviar">
             <input type="hidden" id="tipo" value="login">
-            <input type="submit" class="boton" value="Iniciar Sesión">
+            <input type="submit" class="boton btnlogin" value="Iniciar Sesión">
         </div>
 
         <div class="campo">

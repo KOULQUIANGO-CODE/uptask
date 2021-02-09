@@ -25,7 +25,7 @@ include_once 'includes/templates/header.php';
         </div>
         <div class="campo enviar">
             <input type="hidden" id="tipo" value="crear">
-            <input type="submit" class="boton" value="Crear cuenta">
+            <input type="submit" class="boton btnCrearCuenta" value="Crear cuenta">
         </div>
         <div class="campo">
             <a href="login.php">Inicia Sesión Aquí</a>
